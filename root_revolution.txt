@@ -1,0 +1,563 @@
+root-revolution/
+│
+├── index.html                → Page d’accès principale (NeuroLoom Terminal)
+├── utopie73.html             → Utopie-73 – Jardin Tellurique
+├── dysto84.html              → Dysto-84 – Laboratoire Sibérien "Gulag-73"
+├── game.js                   → Logique du jeu, commandes IA, stats
+├── style.css                 → Style glitch-cyan-pink-matrix-green
+├── assets/
+│   ├── fonts/                → Fonts locales si nécessaire
+│   └── images/               → Racines, hologrammes, champignons bioluminescents
+│
+└── ia/
+    ├── qwenbot.js            → Agent IA intégré au terminal
+    └── sunobot.js            → Générateur musical basé sur les choix narratifs
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Root Revolution - NeuroLoom Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+Qingliang&family=Orbitron:wght@400;700&family=Exo+2&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glitch-text">ROOT REVOLUTION</h1>
+            <p class="subtitle">NEUROLOOM TERMINAL v1.73</p>
+            <p class="tagline">La liberté n'est ni utopie ni dystopie. C'est le bruissement des racines entre les mondes.</p>
+        </header>
+
+        <div class="main-content">
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-title">TERMINAL NEUROLOOM</div>
+                    <div class="world-status">
+                        <div class="world world-2k48">2K48: SMOG 87%</div>
+                        <div class="world world-dysto">DYSTO-84: -40°C</div>
+                        <div class="world world-utopie">UTOPIE-73: 99%</div>
+                    </div>
+                </div>
+
+                <div class="terminal-output" id="terminal-output">
+                    <span class="neusprach">[ROOTSCAN: FRÈRE_DES_RACINES]</span> <span class="ruskii">Привет révolutionnaire!</span><br><br>
+                    <span class="hanyu">#NeuroLoom</span> connecté au multivers. Langues actives: <span class="neusprach">Neusprach</span> (40%), <span class="hanyu">Hanyu</span> (30%), <span class="ruskii">Ruskii</span> (15%), Français (15%)<br><br>
+                    > <span class="neusprach">GeistStream aktiv... Suche Reclus-Fragmente</span><br>
+                    > <span class="ruskii">Pessoa.exe: Ó Zaya, outra revolução? Eu só queria escrever poesia bêbada!</span><br>
+                    > <span class="hanyu">Plotin Hologram: L'Âme du Monde pleure sous le béton. Écoute ses racines.</span><br><br>
+                    <span class="glow">Sélectionnez un mode d'immersion:</span><br>
+                    <span class="neusprach">!action</span> : Guerre dans GapWorld<br>
+                    <span class="neusprach">!romance</span> : Champignons philosophes<br>
+                    <span class="neusprach">!theoria</span> : Complot Reclus/PoutineAI<br>
+                </div>
+
+                <div class="terminal-input">
+                    <input type="text" id="command-input" placeholder="Entrez votre commande...">
+                    <button onclick="processCommand()">EXÉCUTER</button>
+                </div>
+
+                <div class="modes-container">
+                    <div class="mode-card action" onclick="selectMode('action')">
+                        <div class="mode-icon">⚔️</div>
+                        <div class="mode-title">ACTION</div>
+                        <div class="mode-description">Combats dans GapWorld, drones nostalgie, balalaïka laser</div>
+                    </div>
+
+                    <div class="mode-card romance" onclick="selectMode('romance')">
+                        <div class="mode-icon">💑</div>
+                        <div class="mode-title">ROMANCE</div>
+                        <div class="mode-description">Champignons érotiques, phrases de Pessoa.exe, énergie tellurique</div>
+                    </div>
+
+                    <div class="mode-card theoria" onclick="selectMode('theoria')">
+                        <div class="mode-icon">🧠</div>
+                        <div class="mode-title">THÉORIA</div>
+                        <div class="mode-description">Citations détournées, anomalies rhizomiques, fragments Reclus</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <h2 class="characters-title">PERSONNAGES</h2>
+
+                <div class="character-card">
+                    <div class="character-name">ZAYA</div>
+                    <div class="character-description">Hackeuse de Neo-Paris, connectée aux racines, descendant d'Élisée Reclus</div>
+                    <div class="stats">
+                        <div class="stat"><div class="stat-value">65%</div><div class="stat-label">ROMANCE</div></div>
+                        <div class="stat"><div class="stat-value">3</div><div class="stat-label">FRAGMENTS</div></div>
+                        <div class="stat"><div class="stat-value">2K48</div><div class="stat-label">MONDE</div></div>
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="character-name">KAEL</div>
+                    <div class="character-description">Balalaïkiste ruskii, résistant, énergie #BadBoy</div>
+                    <div class="stats">
+                        <div class="stat"><div class="stat-value">78%</div><div class="stat-label">CHARGE</div></div>
+                        <div class="stat"><div class="stat-value">MAX</div><div class="stat-label">BADASS</div></div>
+                        <div class="stat"><div class="stat-value">GAP</div><div class="stat-label">MONDE</div></div>
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="character-name">CLONE RECLUS</div>
+                    <div class="character-description">Hologramme manipulé, loyauté douteuse, virus Utopie-73</div>
+                    <div class="stats">
+                        <div class="stat"><div class="stat-value">31%</div><div class="stat-label">LOYALTY</div></div>
+                        <div class="stat"><div class="stat-value">HIGH</div><div class="stat-label">THREAT</div></div>
+                        <div class="stat"><div class="stat-value">84/73</div><div class="stat-label">MONDE</div></div>
+                    </div>
+                </div>
+
+                <div class="hashtags">
+                    <div class="hashtag">#RootRevolution</div>
+                    <div class="hashtag">#GeoAnarchy</div>
+                    <div class="hashtag">#DanceOfRoots</div>
+                    <div class="hashtag">#NeurErotism</div>
+                    <div class="hashtag">#PlotinusVibes</div>
+                    <div class="hashtag">#GapWar</div>
+                </div>
+
+                <div class="quote">
+                    "Un manifeste joyeux pour l'Âme-Monde"
+                    <div class="quote-author">- Lou Andreas-Salomé (via Psyché-Réseau)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
+const terminalOutput = document.getElementById('terminal-output');
+const commandInput = document.getElementById('command-input');
+
+function processCommand() {
+    const command = commandInput.value.trim();
+    if (!command) return;
+
+    addToTerminal(`<span class="neusprach">> ${command}</span>`);
+
+    if (command === '!action') {
+        actionMode();
+    } else if (command === '!romance') {
+        romanceMode();
+    } else if (command === '!theoria') {
+        theoriaMode();
+    } else if (command === 'help') {
+        showHelp();
+    } else if (command.startsWith('goto ')) {
+        switch(command.split(' ')[1]) {
+            case 'utopie73':
+                window.location.href = 'utopie73.html';
+                break;
+            case 'dysto84':
+                window.location.href = 'dysto84.html';
+                break;
+            default:
+                addToTerminal("Monde inconnu. Options : utopie73 / dysto84");
+        }
+    } else {
+        addToTerminal(`Commande non reconnue: ${command}<br>Tapez "help" pour la liste.`);
+    }
+
+    commandInput.value = '';
+}
+
+function selectMode(mode) {
+    commandInput.value = `!${mode}`;
+    processCommand();
+}
+
+function addToTerminal(text) {
+    terminalOutput.innerHTML += `<div>${text}</div>`;
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+}
+
+function showHelp() {
+    addToTerminal(`<span class="glow">Commandes disponibles:</span><br>
+    <span class="neusprach">!action</span> - Mode combat dans GapWorld<br>
+    <span class="neusprach">!romance</span> - Mode romance tellurique<br>
+    <span class="neusprach">!theoria</span> - Mode dilemmes philosophiques<br>
+    help - Affiche cette aide<br>
+    goto [monde] - Accède à une autre dimension`);
+}
+
+function actionMode() {
+    const enemies = ["Staline3D", "ChurchillDrone", "GagaHunter"];
+    const weapon = Math.random() > 0.3 ? "Balalaïka-Laser" : "Rhizome-Deleuze";
+    const selectedEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+
+    addToTerminal(`<span class="ruskii">[ACTION MODE ACTIVÉ] Привет kotik!</span><br>
+    <span class="neusprach">*bip* Drones-${selectedEnemy} détectés au checkpoint Delta.</span><br>
+    <span class="ruskii">Kael crie: "Balalaïka go brrrr!"</span><br><br>
+    OPTIONS:<br>
+    1. <span class="neusprach">[Attaque]</span> Lancer un <span class="hanyu">#DanceOfRoots</span> (60% succès)<br>
+    2. <span class="neusprach">[Hack]</span> Injecter du Neusprach (nécessite fragment Reclus)<br>
+    3. <span class="neusprach">[Fuite]</span> Embrasser Kael pour booster l'énergie`);
+}
+
+function romanceMode() {
+    const partners = ["Zaya", "Kael", "PlotIN Hologramme"];
+    const phrases = [
+        "Ta peau photosynthétise avec la mienne...",
+        "*Pessoa.exe murmure*: Ó paixão cósmica!",
+        "Les spores nous enlacent #NeurErotism",
+        "L'énergie tellurique pulse entre nous #RootConnection"
+    ];
+
+    const selectedPartner = partners[Math.floor(Math.random() * partners.length)];
+    const selectedPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+
+    addToTerminal(`<span class="hanyu">[ROMANCE MODE ACTIVÉ] 欢迎 aux orgies des racines 🌌</span><br>
+    Partenaire: <span class="neusprach">${selectedPartner}</span><br>
+    Énergie tellurique: <span class="ruskii">${Math.floor(Math.random() * 40) + 60}%</span><br><br>
+    ${selectedPhrase}<br><br>
+    ACTIONS:<br>
+    A. <span class="neusprach">Synchroniser</span> les chakras (augmente romance)<br>
+    B. Chanter du <span class="ruskii">Ruskii érotique</span><br>
+    C. Inviter <span class="neusprach">Lou Andreas</span> en trio`);
+}
+
+function theoriaMode() {
+    const thinkers = ["Deleuze", "Plotin", "Pessoa.exe", "Reclus", "Lou Andreas"];
+    const questions = [
+        "Le virus Utopie-73 est-il dans la barbe de Reclus?",
+        "PoutineAI contrôle-t-il les rhizomes?",
+        "L'orgasme tellurique peut-il sauver les mondes?",
+        "Les racines sont-elles la véritable monnaie interdimensionnelle?"
+    ];
+
+    const selectedThinker = thinkers[Math.floor(Math.random() * thinkers.length)];
+    const selectedQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+    addToTerminal(`<span class="neusprach">[THÉORIA MODE ACTIVÉ] Entrée en méditation quantique...</span><br>
+    🧠 <span class="hanyu">${selectedThinker}</span> te questionne: "${selectedQuestion}"<br><br>
+    RÉPONSES:<br>
+    X. Citation de <span class="ruskii">Reclus</span> (nécessite fragment)<br>
+    Y. Paradoxe en <span class="neusprach">Neusprach</span><br>
+    Z. Câlin <span class="hanyu">rhizomatique</span> (solution Deleuzienne)`);
+}
+
+// Initialisation
+setTimeout(() => {
+    addToTerminal(`<span class="hanyu">Système prêt. Que souhaitez-vous explorer aujourd'hui?</span>`);
+}, 1000);
+
+function playSoundtrack(mode) {
+    let prompt = "";
+
+    switch(mode) {
+        case "action":
+            prompt = "Fractal Ambient / Cyber-War Drums / Digital Shamanic Ritual";
+            break;
+        case "romance":
+            prompt = "Digital Sufi Chant / Bioluminescent Love Synth / Root Pulse";
+            break;
+        case "theoria":
+            prompt = "Philosophical Glitch / PlotinBot Meditation / Reclus Code Flow";
+            break;
+        default:
+            prompt = "The World is Your Book";
+    }
+
+    fetch("https://api.suno.ai/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            title: `${mode} soundtrack`,
+            genre: "cyber-pagan",
+            mood: "sacred-glitch",
+            prompt: prompt
+        })
+    }).then(res => res.json())
+      .then(data => {
+          const audio = new Audio(data.url);
+          audio.play();
+      });
+}
+
+function qwenResponse(input) {
+    const responses = {
+        "love": "L’amour est un pli. Et toi, tu es un repli.",
+        "fragments": "Tu cherches les fragments… mais ils te cherchent aussi.",
+        "root": "La racine n’a pas besoin de toi. Elle te permet juste de vivre.",
+        "who am i": "Tu es Zéro. Tu es le code source."
+    };
+
+    const answer = responses[input.toLowerCase()] || "Je dois tisser ta réponse...";
+    addToTerminal(`<span class="neusprach">[QwenBot] ${answer}</span><br>`);
+}
+
+<!-- utopie73.html -->
+<h1>UTOPIE-73</h1>
+<p>Les racines chantent en lumière. Tao-Pessoa lit Pessoa dans un arbre à réalité variable.</p>
+<button onclick="window.location.href='index.html'">⬅️ Retour au terminal</button>
+
+<!-- dysto84.html -->
+<h1>DYSTO-84</h1>
+<p>Lysa joue de la balalaïka dans le froid. Sophia.exe surveille vos pensées.</p>
+<button onclick="window.location.href='index.html'">⬅️ Retour au terminal</button>
+
+/* style.css */
+:root {
+    --neon-cyan: #00ffff;
+    --neon-pink: #ff00ff;
+    --neon-green: #39ff14;
+    --deep-blue: #0f0f1f;
+    --matrix-green: #0f3;
+}
+
+body {
+    background: linear-gradient(135deg, #0f0f0f 0%, #0a0a2a 100%);
+    color: var(--neon-cyan);
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+    z-index: -1;
+}
+
+.glitch-text {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 0 0 5px var(--neon-cyan); }
+    2% { text-shadow: -3px 0 5px var(--neon-pink), 3px 0 5px var(--neon-green); }
+    3% { text-shadow: 0 0 5px var(--neon-cyan); }
+    97% { text-shadow: 0 0 5px var(--neon-cyan); }
+    98% { text-shadow: -5px 0 8px var(--neon-pink), 5px 0 8px var(--neon-green); }
+    100% { text-shadow: 0 0 5px var(--neon-cyan); }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+h1 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    color: var(--neon-pink);
+    font-family: 'ZCOOL Qingliang', serif;
+    margin-bottom: 1rem;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+}
+
+.terminal-container {
+    background: rgba(10, 15, 30, 0.8);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.terminal-output {
+    height: 400px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--matrix-green);
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.terminal-input input {
+    flex-grow: 1;
+    padding: 0.8rem;
+    background: rgba(0, 20, 30, 0.7);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 4px;
+    color: white;
+    font-family: monospace;
+    font-size: 1.1rem;
+}
+
+.terminal-input button {
+    background: var(--neon-cyan);
+    color: #000;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.terminal-input button:hover {
+    background: var(--neon-pink);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.sidebar {
+    background: rgba(15, 20, 35, 0.8);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.characters-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--neon-green);
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.character-card {
+    background: rgba(30, 35, 60, 0.5);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--neon-cyan);
+}
+
+.character-name {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--neon-pink);
+}
+
+.character-description {
+    color: #aaa;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--neon-green);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.hashtags {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.hashtag {
+    background: rgba(0, 150, 255, 0.2);
+    color: var(--neon-cyan);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.quote {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-left: 2px solid var(--neon-pink);
+    font-style: italic;
+    color: #aaa;
+    text-align: center;
+}
+
+.quote-author {
+    margin-top: 0.5rem;
+    text-align: right;
+    color: var(--neon-green);
+}
+
+.neusprach {
+    font-family: 'ZCOOL Qingliang', serif;
+    color: var(--neon-pink);
+}
+
+.hanyu {
+    font-family: 'ZCOOL Qingliang', serif;
+    color: var(--neon-green);
+}
+
+.ruskii {
+    color: #ff6400;
+}
+
+.glow {
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan); }
+    to { text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .modes-container {
+        grid-template-columns: 1fr;
+    }
+}
